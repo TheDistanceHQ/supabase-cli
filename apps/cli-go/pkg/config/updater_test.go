@@ -2,7 +2,9 @@ package config
 
 import (
 	"context"
+	"io"
 	"net/http"
+	"os"
 	"testing"
 
 	"github.com/h2non/gock"
@@ -13,6 +15,22 @@ import (
 	v1API "github.com/supabase/cli/pkg/api"
 	"github.com/supabase/cli/pkg/cast"
 )
+
+func captureStdout(t *testing.T, fn func() error) (string, error) {
+	t.Helper()
+	original := os.Stdout
+	reader, writer, err := os.Pipe()
+	require.NoError(t, err)
+	os.Stdout = writer
+	defer func() {
+		os.Stdout = original
+	}()
+	runErr := fn()
+	require.NoError(t, writer.Close())
+	out, readErr := io.ReadAll(reader)
+	require.NoError(t, readErr)
+	return string(out), runErr
+}
 
 func TestUpdateApi(t *testing.T) {
 	server := "http://localhost"
@@ -395,5 +413,52 @@ func TestUpdateRemoteConfig(t *testing.T) {
 		// Check result
 		assert.NoError(t, err)
 		assert.True(t, gock.IsDone())
+	})
+}
+
+func TestDiffRemoteConfig(t *testing.T) {
+	server := "http://localhost"
+	client, err := v1API.NewClientWithResponses(server)
+	require.NoError(t, err)
+
+	t.Run("prints config diffs without updating remote config", func(t *testing.T) {
+		updater := NewConfigUpdater(*client)
+		// Setup mock server
+		defer gock.Off()
+		// API config
+		gock.New(server).
+			Get("/v1/projects/test-project/postgrest").
+			Reply(http.StatusOK).
+			JSON(v1API.PostgrestConfigWithJWTSecretResponse{
+				DbSchema: "public",
+				MaxRows:  1000,
+			})
+		// DB config
+		gock.New(server).
+			Get("/v1/projects/test-project/config/database").
+			Reply(http.StatusOK).
+			JSON(v1API.PostgresConfigResponse{})
+		// Run test
+		out, err := captureStdout(t, func() error {
+			return updater.DiffRemoteConfig(context.Background(), baseConfig{
+				ProjectId: "test-project",
+				Api: api{
+					Enabled: true,
+					Schemas: []string{"public", "private"},
+					MaxRows: 1000,
+				},
+				Db: db{
+					Settings: settings{
+						MaxConnections: cast.Ptr(cast.IntToUint(100)),
+					},
+				},
+			})
+		})
+		// Check result
+		assert.NoError(t, err)
+		assert.Contains(t, out, "diff remote[api] local[api]")
+		assert.Contains(t, out, "diff remote[db.settings] local[db.settings]")
+		assert.True(t, gock.IsDone())
+		assert.False(t, gock.HasUnmatchedRequest())
 	})
 }
