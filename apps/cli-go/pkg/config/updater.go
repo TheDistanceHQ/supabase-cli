@@ -77,9 +77,9 @@ func (u *ConfigUpdater) UpdateApiConfig(ctx context.Context, projectRef string, 
 func (u *ConfigUpdater) DiffApiConfig(ctx context.Context, projectRef string, c api) ([]byte, error) {
 	apiConfig, err := u.client.V1GetPostgrestServiceConfigWithResponse(ctx, projectRef)
 	if err != nil {
-		return errors.Errorf("failed to read API config: %w", err)
+		return nil, errors.Errorf("failed to read API config: %w", err)
 	} else if apiConfig.JSON200 == nil {
-		return errors.Errorf("unexpected status %d: %s", apiConfig.StatusCode(), string(apiConfig.Body))
+		return nil, errors.Errorf("unexpected status %d: %s", apiConfig.StatusCode(), string(apiConfig.Body))
 	}
 	return c.DiffWithRemote(*apiConfig.JSON200)
 }
@@ -122,9 +122,9 @@ func (u *ConfigUpdater) UpdateDbSettingsConfig(ctx context.Context, projectRef s
 func (u *ConfigUpdater) DiffDbSettingsConfig(ctx context.Context, projectRef string, s settings) ([]byte, error) {
 	dbConfig, err := u.client.V1GetPostgresConfigWithResponse(ctx, projectRef)
 	if err != nil {
-		return errors.Errorf("failed to read DB config: %w", err)
+		return nil, errors.Errorf("failed to read DB config: %w", err)
 	} else if dbConfig.JSON200 == nil {
-		return errors.Errorf("unexpected status %d: %s", dbConfig.StatusCode(), string(dbConfig.Body))
+		return nil, errors.Errorf("unexpected status %d: %s", dbConfig.StatusCode(), string(dbConfig.Body))
 	}
 	return s.DiffWithRemote(*dbConfig.JSON200)
 }
@@ -196,9 +196,9 @@ func (u *ConfigUpdater) UpdateDbNetworkRestrictionsConfig(ctx context.Context, p
 func (u *ConfigUpdater) DiffDbNetworkRestrictionsConfig(ctx context.Context, projectRef string, n networkRestrictions) ([]byte, error) {
 	networkRestrictionsConfig, err := u.client.V1GetNetworkRestrictionsWithResponse(ctx, projectRef)
 	if err != nil {
-		return errors.Errorf("failed to read network restrictions config: %w", err)
+		return nil, errors.Errorf("failed to read network restrictions config: %w", err)
 	} else if networkRestrictionsConfig.JSON200 == nil {
-		return errors.Errorf("unexpected status %d: %s", networkRestrictionsConfig.StatusCode(), string(networkRestrictionsConfig.Body))
+		return nil, errors.Errorf("unexpected status %d: %s", networkRestrictionsConfig.StatusCode(), string(networkRestrictionsConfig.Body))
 	}
 	return n.DiffWithRemote(*networkRestrictionsConfig.JSON200)
 }
@@ -244,9 +244,9 @@ func (u *ConfigUpdater) UpdateSslEnforcement(ctx context.Context, projectRef str
 func (u *ConfigUpdater) DiffSslEnforcementConfig(ctx context.Context, projectRef string, s sslEnforcement) ([]byte, error) {
 	sslEnforcementConfig, err := u.client.V1GetSslEnforcementConfigWithResponse(ctx, projectRef)
 	if err != nil {
-		return errors.Errorf("failed to read SSL enforcement config: %w", err)
+		return nil, errors.Errorf("failed to read SSL enforcement config: %w", err)
 	} else if sslEnforcementConfig.JSON200 == nil {
-		return errors.Errorf("unexpected status %d: %s", sslEnforcementConfig.StatusCode(), string(sslEnforcementConfig.Body))
+		return nil, errors.Errorf("unexpected status %d: %s", sslEnforcementConfig.StatusCode(), string(sslEnforcementConfig.Body))
 	}
 	return s.DiffWithRemote(*sslEnforcementConfig.JSON200)
 }
@@ -291,9 +291,9 @@ func (u *ConfigUpdater) UpdateAuthConfig(ctx context.Context, projectRef string,
 func (u *ConfigUpdater) DiffAuthConfig(ctx context.Context, projectRef string, c *auth, filter ...func(string) bool) ([]byte, error) {
 	authConfig, err := u.client.V1GetAuthServiceConfigWithResponse(ctx, projectRef)
 	if err != nil {
-		return errors.Errorf("failed to read Auth config: %w", err)
+		return nil, errors.Errorf("failed to read Auth config: %w", err)
 	} else if authConfig.JSON200 == nil {
-		return errors.Errorf("unexpected status %d: %s", authConfig.StatusCode(), string(authConfig.Body))
+		return nil, errors.Errorf("unexpected status %d: %s", authConfig.StatusCode(), string(authConfig.Body))
 	}
 	return c.DiffWithRemote(*authConfig.JSON200, filter...)
 }
@@ -412,9 +412,9 @@ func (u *ConfigUpdater) UpdateStorageConfig(ctx context.Context, projectRef stri
 func (u *ConfigUpdater) DiffStorageConfig(ctx context.Context, projectRef string, c storage) ([]byte, error) {
 	storageConfig, err := u.client.V1GetStorageConfigWithResponse(ctx, projectRef)
 	if err != nil {
-		return errors.Errorf("failed to read Storage config: %w", err)
+		return nil, errors.Errorf("failed to read Storage config: %w", err)
 	} else if storageConfig.JSON200 == nil {
-		return errors.Errorf("unexpected status %d: %s", storageConfig.StatusCode(), string(storageConfig.Body))
+		return nil, errors.Errorf("unexpected status %d: %s", storageConfig.StatusCode(), string(storageConfig.Body))
 	}
 	return c.DiffWithRemote(*storageConfig.JSON200)
 }

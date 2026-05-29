@@ -15,12 +15,12 @@
 
 ## API Routes
 
-| Method | Path                                | Auth         | Request body | Response (used fields)              |
-| ------ | ----------------------------------- | ------------ | ------------ | ----------------------------------- |
-| `GET`  | `/v1/projects/{ref}/postgrest`      | Bearer token | none         | PostgREST config object             |
-| `GET`  | `/v1/projects/{ref}/config/auth`    | Bearer token | none         | Auth config object                  |
-| `GET`  | `/v1/projects/{ref}/config/storage` | Bearer token | none         | Storage config object               |
-| `GET`  | `/v1/projects/{ref}/config/database` | Bearer token | none         | Database config object              |
+| Method | Path                                 | Auth         | Request body | Response (used fields)  |
+| ------ | ------------------------------------ | ------------ | ------------ | ----------------------- |
+| `GET`  | `/v1/projects/{ref}/postgrest`       | Bearer token | none         | PostgREST config object |
+| `GET`  | `/v1/projects/{ref}/config/auth`     | Bearer token | none         | Auth config object      |
+| `GET`  | `/v1/projects/{ref}/config/storage`  | Bearer token | none         | Storage config object   |
+| `GET`  | `/v1/projects/{ref}/config/database` | Bearer token | none         | Database config object  |
 
 Note: Additional config endpoints may be read depending on the config sections present in `config.toml`.
 

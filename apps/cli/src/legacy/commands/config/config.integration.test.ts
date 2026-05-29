@@ -33,9 +33,7 @@ describe("legacy config command integration", () => {
         "abcdefghijklmnopqrst",
       ]);
 
-      expect(proxy.calls).toEqual([
-        ["config", "diff", "--project-ref", "abcdefghijklmnopqrst"],
-      ]);
+      expect(proxy.calls).toEqual([["config", "diff", "--project-ref", "abcdefghijklmnopqrst"]]);
     }).pipe(Effect.provide(Layer.mergeAll(proxy.layer, CliOutput.layer(textCliOutputFormatter()))));
 
     return run as Effect.Effect<void>;

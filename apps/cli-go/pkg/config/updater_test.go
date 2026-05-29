@@ -389,6 +389,9 @@ func TestUpdateRemoteConfig(t *testing.T) {
 				Settings: settings{
 					MaxConnections: cast.Ptr(cast.IntToUint(100)),
 				},
+				NetworkRestrictions: networkRestrictions{
+					Enabled: true,
+				},
 			},
 			Auth: auth{
 				Enabled: true,
