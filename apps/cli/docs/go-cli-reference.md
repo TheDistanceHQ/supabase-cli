@@ -1035,11 +1035,24 @@ Usage:
   supabase config [command]
 
 Available Commands:
+  diff        Diffs local config.toml against the linked project
   push        Pushes local config.toml to the linked project
 
 Flags:
   -h, --help                 help for config
       --project-ref string   Project ref of the Supabase project.
+```
+
+#### config diff
+
+```
+Diffs local config.toml against the linked project
+
+Usage:
+  supabase config diff [flags]
+
+Flags:
+  -h, --help   help for diff
 ```
 
 #### config push
